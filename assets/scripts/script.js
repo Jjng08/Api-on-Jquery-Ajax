@@ -1,11 +1,11 @@
 $(document).ready(function () {
     const apiUrl = "https://rickandmortyapi.com/api/character/";
 
-    // Add dynamic content to header and footer
+    //header y footer
     $('#header').html('<h1>Rick and Morty Personajes</h1>');
     $('#footer').html('<p>&copy; 2023 Javier Nieves</p>');
 
-    // Add dynamic content to main container
+    //Cuerpo del filtro
     $('#main-container').html(`
         <h4>Busqueda Personajes</h4>
         <div id="filter-container" class="mb-4">
