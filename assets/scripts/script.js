@@ -1,9 +1,21 @@
 $(document).ready(function () {
     const apiUrl = "https://rickandmortyapi.com/api/character/";
 
+    // Add dynamic content to header and footer
+    $('#header').html('<h1>Rick and Morty Personajes</h1>');
+    $('#footer').html('<p>&copy; 2023 Javier Nieves</p>');
+
     // Add dynamic content to main container
     $('#main-container').html(`
-        <h1 class="text-center mb-4">Rick and Morty Personajes</h1>
+        <h4>Busqueda Personajes</h4>
+        <div id="filter-container" class="mb-4">
+            <input type="text" id="search" class="form-control mb-2" placeholder="Buscar personaje...">
+            <select id="species-filter" class="form-control">
+                <option value="">Todos</option>
+                <option value="Human">Humanos</option>
+                <option value="Alien">Aliens</option>
+            </select>
+        </div>
         <div id="character-container" class="row g-4"></div>
     `);
 
@@ -18,7 +30,7 @@ $(document).ready(function () {
             // Iterar y crear cards
             characters.forEach(character => {
                 const cardHtml = `
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 character-card" data-name="${character.name}" data-species="${character.species}">
                         <div class="card h-100" data-id="${character.id}" data-name="${character.name}" 
                             data-status="${character.status}" data-species="${character.species}" 
                             data-gender="${character.gender}" data-origin="${character.origin.name}" 
@@ -54,6 +66,29 @@ $(document).ready(function () {
                 // Mostrar el modal
                 $("#characterModal").modal("show");
             });
+
+            // Filtro de búsqueda
+            $("#search").on("keyup", function () {
+                const searchTerm = $(this).val().toLowerCase();
+                filterCharacters(searchTerm, $("#species-filter").val());
+            });
+
+            // Filtro de especie
+            $("#species-filter").on("change", function () {
+                filterCharacters($("#search").val().toLowerCase(), $(this).val());
+            });
+
+            function filterCharacters(searchTerm, species) {
+                $(".character-card").each(function () {
+                    const characterName = $(this).data("name").toLowerCase();
+                    const characterSpecies = $(this).data("species");
+                    if (characterName.includes(searchTerm) && (species === "" || characterSpecies === species)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
         },
         error: function (error) {
             console.error("Error al consumir la API:", error);
